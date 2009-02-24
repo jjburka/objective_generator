@@ -1,0 +1,28 @@
+#import "ObjectiveResource.h"
+
+@interface <%= @model_name %> : NSObject {
+	
+<%= ObjectiveSyntax.interface(@model_attributes) %>
+  
+}
+
+<%= ObjectiveSyntax.properties(@model_attributes) %>
+
+<% @nested_models.each do |nested| %>
+
+-(NSArray *)findAll<%= nested.model_name.pluralize %>;
+  
+<% end %>
+
+<% @routes.each do |route| %>
+<% methods =  route.conditions[:method].nil? ? ["get","post"] : [route.conditions[:method]] %>
+<% methods.each do |method| %>
+<% if methods.size > 1 %>
+//- (<%= method == "get" ? "id" : "BOOL"%>)<%= "#{method}#{route.requirements[:action].capitalize}" %>WithError:(NSError **)error;
+<% else %>
+//- (<%= method == "get" ? "id" : "BOOL"%>)<%= "#{route.requirements[:action]}" %>WithError:(NSError **)error;
+<% end %>
+<% end %>
+<% end %>
+
+@end

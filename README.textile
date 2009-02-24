@@ -1,0 +1,60 @@
+h1. ObjectiveResource
+
+This plugin creates objective c models from the routes declared in routes.rb for use with "ObjectiveResouce":http://github.com/yfactorial/objectiveresource/tree/master
+
+h2. Usage
+
+rake objective_resource:generate 
+
+h2. Example 1
+
+If you have a routes.rb file that contains the following
+
+<pre><code>
+map.resources :people do |person|
+  person.resources :dogs
+end
+</code></pre>
+
+The plugin will create 3 class files
+
+h3. ObjectiveResourceSetup
+
+The file ObjectiveResourceSetup contains settings for the framework (url , user info , etc)
+
+h3. Person , Dog
+
+The model files discovered from the routes above. The attributes found in the columns_hash will be converted to objective c types. Also , the nested routes for dogs will be generated
+
+The Person model will also have 
+
+@-(NSArray *)findAllDogs;@
+
+which will get all the person's dogs
+
+h2. Example 2
+
+If you have a routes.rb file that contains the following
+
+<pre><code>
+map.resources :people do |person|
+  person.resources :dogs , {:member=>{:pet => [:post]},:collection =>{ :search => [:any]}}
+end
+</code></pre>
+
+The plugin will generate the same files as above but will also generate the following stubs with most likely incomplete boilerplate code. 
+
+<pre><code>
+- (BOOL)petWithError:(NSError **)error;
+- (id)getSearchWithError:(NSError **)error;
+- (BOOL)postSearchWithError:(NSError **)error;
+</code></pre>
+
+h2. Todo
+
+* Models that are nested in multiple models are not created correctly
+
+* tests
+
+
+Copyright (c) 2009 James Burka, released under the MIT license

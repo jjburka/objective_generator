@@ -1,0 +1,110 @@
+#import "<%= @model_name %>.h"
+<% @nested_models.each do |nested| %>
+#import "<%= nested.model_name %>.h"<% end %>
+<% @belongs_to.each do |parent| %>
+#import "<%= parent.model_name %>.h"<% end %>
+
+@interface <%= @model_name %> ()
+
+<% unless @belongs_to.empty? %>
+-(NSString *) nestedPath;
+-(NSString *) nestedPathWithId;
+<% end %>
+@end
+
+
+
+@implementation <%= @model_name %>
+
+<%= ObjectiveSyntax.synthesize(@model_attributes) %>
+
+- (void) dealloc {
+  <% @model_attributes.each { |name , type| %>  
+  [<%= name %> release];<% } %>
+  [super dealloc];
+}
+
++ (NSString *)getRemoteCollectionName {
+	return @"<%= @model_name.underscore.pluralize %>";
+}
+
+<% unless @routes.empty? %>
+// The following non-standard routes were found
+// customize as needed
+<% end %>
+<% @routes.each do |route| %>
+<% methods =  route.conditions[:method].nil? ? ["get","post"] : [route.conditions[:method]] %>
+<% methods.each do |method| %>
+/*
+<% if methods.size > 1 %>
+- (<%= method == "get" ? "id" : "BOOL"%>)<%= "#{method}#{route.requirements[:action].capitalize}" %>WithError:(NSError **)error {
+<% else %>
+- (<%= method == "get" ? "id" : "BOOL"%>)<%= "#{route.requirements[:action]}" %>WithError:(NSError **)error {
+<% end %>
+<% if route.significant_keys.include?(:id) %>	
+  NSString *path = [self nestedPathWithId];
+<% else %>
+  NSString *path = [self nestedPath];
+<% end %>
+  Response *res = [Connection <%= method%>:[[super class] buildUrl:[path stringByAppendingString:@"/<%= route.requirements[:action]%>"]]
+																								withUser:[[self class]  getRemoteUser] andPassword:[[self class]
+																								 getRemotePassword]];
+  if([res isError] && aError) {
+  	*aError = res.error;
+  }
+<% if method == "get" %>
+  return [self performSelector:[self getRemoteParseDataMethod] withObject:res.body];
+<% else %>
+  if ([res isSuccess]) {
+		return YES;
+	}
+	else {
+		return NO;
+	}
+<% end %>
+}
+*/
+
+<% end %>
+<% end %>
+<% @nested_models.each do |nested| %>
+  
+-(NSArray *)findAll<%= nested.model_name.pluralize %> {
+  NSString *collection = [<%= nested.model_name%> getRemoteCollectionName]; 
+	return [<%= @model_name %> findRemote:[NSString stringWithFormat:@"%@/%@",<%= @model_name.foreign_key.camelize(:lower)%>,collection,nil]];   
+}
+  
+  
+<% end %>
+
+<% unless @belongs_to.empty? %>
+#pragma mark ObjectiveResource overrides to handle nested resources
+<% end %>
+
+<% @belongs_to.each do |parent| %>
+
+- (BOOL)createRemoteWithResponse:(NSError **)aError {
+	return [self createRemoteAtPath:[<%= parent.model_name %> getRemoteElementPath:[self nestedPath]] withResponse:aError];
+}
+
+- (BOOL)updateRemoteWithResponse:(NSError **)aError {
+	return [self updateRemoteAtPath:[<%= parent.model_name %> getRemoteElementPath:[self nestedPathWithId]] withResponse:aError];	
+}
+
+- (BOOL)destroyRemoteWithResponse:(NSError **)aError {
+	return [self destroyRemoteAtPath:[<%= parent.model_name %> getRemoteElementPath:[self nestedPathWithId]] withResponse:aError];
+}
+
+
+-(NSString *) nestedPath {
+  NSString *collection = [[self class] getRemoteCollectionName]; 
+	return [NSString stringWithFormat:@"%@/%@",<%= parent.model_name.foreign_key.camelize(:lower) %>,collection,nil];
+}
+
+-(NSString *) nestedPathWithId {
+	return [[self nestedPath] stringByAppendingFormat:@"/%@",<%= @model_name.foreign_key.camelize(:lower) %>,nil];
+}
+
+<% end %>
+
+@end
