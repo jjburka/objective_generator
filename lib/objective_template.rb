@@ -5,6 +5,7 @@ class ObjectiveTemplate
     [Templates::MODEL_HEADER,Templates::MODEL_IMPLEMENTATION].each do |file|
       infile = File.join(OR_PLUGIN_PATH,"templates",file)
       outfile = File.join(OR_PLUGIN_PATH,"generated","#{m.model.name}#{infile.scan(/(\..)\.erb$/).flatten.first}")
+      puts "Generating #{outfile}"
       template = String.new
       File.open(infile, 'r') { |f| template = f.readlines }
       File.open(outfile, 'w') {|f| f.write(ERB.new(template.join()).result(m.get_binding)) }
@@ -15,6 +16,7 @@ class ObjectiveTemplate
     [Templates::SETUP_HEADER,Templates::SETUP_IMPLEMENTATION].each do |file|
       infile = File.join(OR_PLUGIN_PATH,"templates",file)
       outfile = File.join(OR_PLUGIN_PATH,"generated",file)
+      puts "Generating #{outfile}"
       File.copy(infile,outfile)
     end
   end

@@ -7,12 +7,11 @@ namespace :objective_resource do
       unless route.requirements.empty?
         model_name = "#{route.requirements[:controller].singularize.camelize}".to_sym
         found_model = found_models[model_name]
-        
+        found_model.add_route(route)
         # these are the symbols in the route (:id , :action , etc)
         route.significant_keys.each do |key|
           #collect the nested models
           unless ObjectiveGenerator::IGNOREABLE_ROUTE_KEYS.include?(key)
-            found_model.add_route(route)
             begin
               # see if its a model_id key , if so build a parent model
               unless key.to_s.scan("id").empty?

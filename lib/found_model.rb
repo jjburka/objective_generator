@@ -16,6 +16,7 @@ class FoundModel
   def add_route(route)
     #only collect non-standard routes
     if !CRUD.include?(route.requirements[:action]) && route.significant_keys.include?(:format)
+      puts "adding #{route}"
       @routes << route unless @routes.include?route
     end
   end

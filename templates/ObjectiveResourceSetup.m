@@ -1,5 +1,6 @@
 #import "ObjectiveResourceSetup.h"
 #import "ObjectiveResource.h"
+#import "ObjectiveResourceDateFormatter.h"
 
 @implementation ObjectiveResourceSetup
 
@@ -15,12 +16,17 @@
 	//[ObjectiveResourceConfig setResponseType:XmlResponse];
 	
 	// datetime format (default values)
-	//[ ObjectiveResourceDateFormatter setDateTimeFormatString:@"EEE, dd MMM yyyy HH:mm:ss ZZ" ];
-	//[ ObjectiveResourceDateFormatter setDateFormatString:@"EEE, dd MMM yyyy" ];
+	//[ObjectiveResourceDateFormatter setDateTimeFormatString:@"yyyy-MM-dd'T'HH:mm:ss'Z'" ];
+	//[ObjectiveResourceDateFormatter setDateFormatString:@"yyyy-MM-dd" ];
+	//[ObjectiveResourceDateFormatter setDateTimeZoneFormatString:@"yyyy-MM-dd'T'HH:mm:ssz"];
 	
+	// date serialization (default)
+	// options are either Date or DateTime
+	//[ObjectiveResourceDateFormatter setSerializeFormat:DateTime];
+
 	//user cred
 	//[ObjectiveResourceConfig setUser:@"user"];
-  //[ObjectiveResourceConfig setUser:@"password"];
+  //[ObjectiveResourceConfig setPassword:@"password"];
 	
 }
 
