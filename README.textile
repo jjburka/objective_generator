@@ -45,7 +45,7 @@ end
 The plugin will generate the same files as above but will also generate the following stubs with most likely incomplete boilerplate code. 
 
 <pre><code>
-- (BOOL)potPetWithError:(NSError **)error;
+- (BOOL)postPetWithError:(NSError **)error;
 - (id)getSearchWithError:(NSError **)error;
 - (BOOL)postSearchWithError:(NSError **)error;
 </code></pre>
