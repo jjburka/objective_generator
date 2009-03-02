@@ -59,7 +59,7 @@
 <% end %>
 <% end %>
 <% @nested_models.each do |nested| %>
--(NSArray *)findAll<%= nested.model_name.pluralize %> {
+- (NSArray *)findAll<%= nested.model_name.pluralize %> {
   NSString *collection = [<%= nested.model_name%> getRemoteCollectionName]; 
 	return [<%= @model_name %> findRemote:[NSString stringWithFormat:@"%@/%@",<%= @model_name.foreign_key.camelize(:lower)%>,collection,nil]];   
 }
@@ -82,12 +82,12 @@
 }
 
 
--(NSString *) nestedPath {
+- (NSString *) nestedPath {
   NSString *collection = [[self class] getRemoteCollectionName]; 
 	return [NSString stringWithFormat:@"%@/%@",<%= parent.model_name.foreign_key.camelize(:lower) %>,collection,nil];
 }
 
--(NSString *) nestedPathWithId {
+- (NSString *) nestedPathWithId {
 	return [[self nestedPath] stringByAppendingFormat:@"/%@",<%= @model_name.foreign_key.camelize(:lower) %>,nil];
 }
 <% end %>

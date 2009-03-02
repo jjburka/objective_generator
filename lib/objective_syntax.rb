@@ -13,7 +13,7 @@ class ObjectiveSyntax
   end
   
   def self.property(name,type)
-    "@property (nonatomic , #{self.memory_type(type)}) #{type}#{self.type_format(type)} #{name};\n"
+    "@property(nonatomic, #{self.memory_type(type)}) #{type}#{self.type_format(type)} #{name};\n"
   end
   
   def self.properties(variables = {})

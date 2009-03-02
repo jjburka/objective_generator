@@ -17,4 +17,5 @@ require 'type_rosetta'
 require "erb"
 require "found_models"
 require "found_model"
+require "model_collector"
 require 'ftools'
