@@ -5,7 +5,7 @@
 @implementation ObjectiveResourceSetup
 
 
-+ (NSString *)setup {
++ (void *)setup {
 	//Configure ObjectiveResource
 	[ObjectiveResourceConfig setSite:@"http://localhost:3000/"];
 	
